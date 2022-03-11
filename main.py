@@ -21,4 +21,10 @@ async def on_message(message):
     if message.author == client.user:
         return
 
+    if user_message.lower() == "hello":
+        await message.channel.send(f"Hello {username}!")
+        return
+    if user_message.lower() == "fuck you":
+        await message.channel.send(f"No fuck you {username}!")
+        return
 client.run(TOKEN)
