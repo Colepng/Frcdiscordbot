@@ -1,16 +1,18 @@
 import discord
 import json
 
+from discord.ext import commands
+
+intents = discord.Intents.default()
+intents.members = True
+
+
+
+bot = commands.Bot(command_prefix="!", intents = intents)
+
+bot.load_extension("somecommands")
+
 f = open("C:\\Users\gamin\\OneDrive\\Documents\\GitHub\\Frcdiscordbot\\config.json",)
-
-get_token = json.load(f)
-TOKEN = get_token["token"]
-TEST = get_token["test"]
-client = discord.Client()
-
-@client.event
-async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
-    print(TEST)
-
-client.run(TOKEN)
+config_file = json.load(f)
+TOKEN = config_file["token"]
+bot.run(TOKEN)
