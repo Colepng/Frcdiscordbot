@@ -1,0 +1,8 @@
+    @client.event
+    async def on_voice_state(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState, ctx: commands.Context):
+        channel = self.bot.get_channel(920747397511008258)
+        if before == None
+            await ctx.send(f"Howdy")
+            return
+        else:
+            return
