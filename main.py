@@ -17,9 +17,9 @@ bot = commands.Bot(command_prefix="!", intents = intents)
 #Here I'm loading the python files where I stored my commands
 
 bot.load_extension("cogs.somecommands")
-bot.load_extension("cogs.Tesging button")
-bot.load_extension("cogs.newcommands")
-bot.load_extension("cogs.FrcAPI")
+#bot.load_extension("cogs.Tesging button")
+#bot.load_extension("cogs.newcommands")
+#bot.load_extension("cogs.FrcAPI")
 
 
 #Here I am opening a json file that has my discord bot token and getting that token and puting it into a constent
