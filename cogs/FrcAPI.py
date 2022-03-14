@@ -1,53 +1,71 @@
+#I'm importign the requests, json and discord library and also the commands extenstion for discord.py
+
+from dotenv import load_dotenv
+from os import getenv 
 import requests
 import json
 import discord
 
 from discord.ext import commands
 
-con = open("C:\\Users\\gamin\\OneDrive\\Documents\\Code\\Frcbot\\config.json",)
-config_file = json.load(con)
-authy = config_file["key_frc"]
-team_num = 0 #team number
-dis_rank_with_team = "https://frc-api.firstinspires.org/v3.0/2022/rankings/district?districtCode{dis}=&teamNumber={tean_num}"
+
+#Here Im doing the same thing as in main.py. I am opning the config file and I am geting my key for the frc api and putting it into a constnet
+
+
+load_dotenv()
+AUTHY = getenv("authy")
+
 
 client = discord.Client
+
+#Here I am making a class that goes into commands.Cog which is how discord.py finds its commands
 class FrcApi(commands.Cog):
     """Commands that use the Frc API"""
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        from cogs import FrcAPI
+
+
+    #Here I am making a new command and naming it dis_ranking
     @commands.command(name="dis_ranking")
-    async def dis_rank(self, ctx: commands.Context, arg):
+    #Here I am getting self which is ________, then im getting im setting the varible ctx as commands.Context, I'm also getting the word after the commands and seeting as the varible arg
+    async def dis_rank(self, ctx: commands.Context, dis_code):  
         """Outputs the district ranking"""
 
 
         payload={}
         headers = {
-            'Authorization': 'Basic' + str(authy),
+            'Authorization': 'Basic' + str(AUTHY),
              'If-Modified-Since': ''
         }
         
-        dis_rank = "https://frc-api.firstinspires.org/v3.0/2022/rankings/district?districtCode=" + str(arg)
+        dis_rank = "https://frc-api.firstinspires.org/v3.0/2022/rankings/district?districtCode=" + str(dis_code)
         response = requests.request("GET", dis_rank, headers=headers, data=payload)  
 
         file = open("C:\\Users\\gamin\\OneDrive\\Documents\\Code\\Frcbot\\dis_rank.txt","w")
         file.write(response.text.replace(",","\n" ))
         file.close()
         await ctx.send(f"test", file=discord.File("C:\\Users\\gamin\\OneDrive\\Documents\\Code\\Frcbot\\dis_rank.txt",))
+
+
+
+       # @dis_rank.error
+       # async def dis_ranking_error(self, ctx: commands.Context, error: commands.CommandError): do error handling later
+        #    """Handles errors for dis_ranking"""
+
 
     @commands.command(name="dis_ranking_team")
-    async def dis_rank_team(self, ctx: commands.Context, arg):
+    async def dis_rank_team(self, ctx: commands.Context, team_num):
         """Outputs the district ranking"""
 
 
         payload={}
         headers = {
-            'Authorization': 'Basic' + str(authy),
+            'Authorization': 'Basic' + str(AUTHY),
              'If-Modified-Since': ''
         }
         
-        dis_rank = "https://frc-api.firstinspires.org/v3.0/2022/rankings/district?districtCode=&teamNumber=" + str(arg)
+        dis_rank = "https://frc-api.firstinspires.org/v3.0/2022/rankings/district?districtCode=&teamNumber=" + str(team_num)
         response = requests.request("GET", dis_rank, headers=headers, data=payload)  
 
         file = open("C:\\Users\\gamin\\OneDrive\\Documents\\Code\\Frcbot\\dis_rank.txt","w")
@@ -56,6 +74,9 @@ class FrcApi(commands.Cog):
         await ctx.send(f"test", file=discord.File("C:\\Users\\gamin\\OneDrive\\Documents\\Code\\Frcbot\\dis_rank.txt",))
 
         
+
+
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(FrcApi(bot))
