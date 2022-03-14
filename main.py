@@ -26,6 +26,6 @@ bot.load_extension("cogs.FrcAPI")
 
 
 load_dotenv()
-TOKEN = getenv("TOKEN")
+TOKEN = getenv("token")
 print(str(TOKEN) * 20)
 bot.run(TOKEN)
