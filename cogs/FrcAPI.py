@@ -42,10 +42,10 @@ class FrcApi(commands.Cog):
         dis_rank = "https://frc-api.firstinspires.org/v3.0/2022/rankings/district?districtCode=" + str(dis_code)
         response = requests.request("GET", dis_rank, headers=headers, data=payload)  
 
-        file = open("C:\\Users\\gamin\\OneDrive\\Documents\\Code\\Frcbot\\dis_rank.txt","w")
+        file = open("dis_rank.txt","w")
         file.write(response.text.replace(",","\n" ))
         file.close()
-        await ctx.send(f"test", file=discord.File("C:\\Users\\gamin\\OneDrive\\Documents\\Code\\Frcbot\\dis_rank.txt",))
+        await ctx.send(f"test", file=discord.File("dis_rank.txt",))
 
 
 
