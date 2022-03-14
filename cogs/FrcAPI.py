@@ -1,20 +1,18 @@
 #I'm importign the requests, json and discord library and also the commands extenstion for discord.py
 
-from dotenv import load_dotenv
-from os import getenv 
+import os
 import requests
-import json
 import discord
 
+from dotenv import load_dotenv
 from discord.ext import commands
 
 
 #Here Im doing the same thing as in main.py. I am opning the config file and I am geting my key for the frc api and putting it into a constnet
 
-
 load_dotenv()
-AUTHY = getenv("authy")
 
+AUTHY = os.getenv('AUTHY')
 
 client = discord.Client
 
@@ -35,7 +33,7 @@ class FrcApi(commands.Cog):
 
         payload={}
         headers = {
-            'Authorization': 'Basic' + str(AUTHY),
+            'Authorization': 'Basic ' + str(AUTHY),
              'If-Modified-Since': ''
         }
         
@@ -61,17 +59,17 @@ class FrcApi(commands.Cog):
 
         payload={}
         headers = {
-            'Authorization': 'Basic' + str(AUTHY),
+            'Authorization': 'Basic ' + str(AUTHY),
              'If-Modified-Since': ''
         }
         
         dis_rank = "https://frc-api.firstinspires.org/v3.0/2022/rankings/district?districtCode=&teamNumber=" + str(team_num)
         response = requests.request("GET", dis_rank, headers=headers, data=payload)  
 
-        file = open("C:\\Users\\gamin\\OneDrive\\Documents\\Code\\Frcbot\\dis_rank.txt","w")
+        file = open("dis_rank.txt","w")
         file.write(response.text.replace(",","\n" ))
         file.close()
-        await ctx.send(f"test", file=discord.File("C:\\Users\\gamin\\OneDrive\\Documents\\Code\\Frcbot\\dis_rank.txt",))
+        await ctx.send(f"test", file=discord.File("dis_rank.txt",))
 
         
 
