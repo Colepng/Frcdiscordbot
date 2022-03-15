@@ -1,9 +1,5 @@
 #I'm importign the requests, json and discord library and also the commands extenstion for discord.py
-
-from fnmatch import translate
-from gettext import translation
 import os
-from turtle import title
 import requests
 import discord
 
@@ -83,9 +79,10 @@ class FrcApi(commands.Cog):
     async def get_dis(self, ctx:commands.Context, year=None):
         if year == None:
             year = c_year
-            
+
         frc_districts = "https://frc-api.firstinspires.org/v3.0/" + str(year) + "/districts"
         response = requests.request("GET", frc_districts, headers=headers, data=payload) 
+
 
         trans_table = response.text.maketrans("{,","\n ",'}]["')
         response = response.text.translate(trans_table)
@@ -97,9 +94,43 @@ class FrcApi(commands.Cog):
         await ctx.send(f"Here is all frc districts", file=discord.File("dis_rank.txt",))
 
     @commands.command(name="score")
-    async def score(self, ctx: commands.Context):
-        """Gets all score info of a """
+    async def score(self, ctx: commands.Context, eventcode, tour_level, team_num=None, start=None, end=None):
+        #if year == None:
+        year = c_year
 
-        
+        if team_num == None:
+                frc_score = f"https://frc-api.firstinspires.org/v3.0/{year}/scores/{eventcode}/{tour_level}?"
+
+
+        elif team_num == "match":
+            frc_score = f"https://frc-api.firstinspires.org/v3.0/{year}/scores/{eventcode}/{tour_level}?matchnumber={start}"
+
+  
+        elif team_num != None and start != None and end == None:
+            frc_score = f"https://frc-api.firstinspires.org/v3.0/{year}/scores/{eventcode}/{tour_level}?start={team_num}&end={start}"
+
+        else:
+            if end == None:
+                frc_score = f"https://frc-api.firstinspires.org/v3.0/{year}/scores/{eventcode}/{tour_level}?teamnumber={team_num}"
+            else:
+                frc_score = f"https://frc-api.firstinspires.org/v3.0/{year}/scores/{eventcode}/{tour_level}?teamnumber={team_num}&start={start}&end={end}"
+
+    
+        response = requests.request("GET", frc_score, headers=headers, data=payload)
+
+        trans_table = response.text.maketrans(",","\n",'}{]["')
+        response = response.text.translate(trans_table)
+        response = response.replace("matchNumber","\n\nmatchNumber")
+
+        file = open("dis_rank.txt", "w")
+        file.write(response)
+        file.close()
+
+        await ctx.send(f"The score info you requested", file=discord.File("dis_rank.txt",) )
+ 
+
+
+
+
 def setup(bot: commands.Bot):
     bot.add_cog(FrcApi(bot))
