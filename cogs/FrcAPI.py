@@ -10,7 +10,6 @@ from discord.ext import commands
 #Here Im doing the same thing as in main.py. I am opning the config file and I am geting my key for the frc api and putting it into a constnet
 
 load_dotenv()
-
 AUTHY = os.getenv('AUTHY')
 
 payload={}
@@ -31,22 +30,23 @@ class FrcApi(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-
     #Here I am making a new command and naming it dis_ranking
     @commands.command(name="district_info")
     #Here I am getting self which is ________, then im getting im setting the varible ctx as commands.Context, I'm also getting the word after the commands and seeting as the varible arg
-    async def dis_rank(self, ctx: commands.Context, dis_code, year=None):  
-        """Outputs all information about a disrict"""
-        if year == None:
-            year = c_year
+    async def dis_rank(self, ctx: commands.Context, dis_code=None, year=None):  
+        """Outputs all information about a district"""
+        if dis_code == None:
+            await ctx.send(f"Please input a district code, if your don't know one you can use the !districts command")
+        else:
+            if year == None:
+                year = c_year
 
-        dis_rank = "https://frc-api.firstinspires.org/v3.0/" + str(year)  + "/rankings/district?districtCode=" + str(dis_code)
-        response = requests.request("GET", dis_rank, headers=headers, data=payload)  
-        print(AUTHY)
-        file = open("dis_rank.txt","w")
-        file.write(response.text.replace(",","\n" ))
-        file.close()
-        await ctx.send(f"Here is the {dis_code} district info", file=discord.File("dis_rank.txt",))
+            dis_rank = f"https://frc-api.firstinspires.org/v3.0/{year}/rankings/district?districtCode={dis_code}"
+            response = requests.request("GET", dis_rank, headers=headers, data=payload)
+            file = open("write_to.txt","w")
+            file.write(response.text.replace(",","\n" ))
+            file.close()
+            await ctx.send(f"Here is the {dis_code} district info", file=discord.File("write_to.txt",))
 
 
 
@@ -56,42 +56,48 @@ class FrcApi(commands.Cog):
 
 
     @commands.command(name="team_info")
-    async def dis_rank_team(self, ctx: commands.Context, team_num, year=None):
+    async def dis_rank_team(self, ctx: commands.Context, team_num=None, year=None):
         """Gets teams ranking in there district"""
 
-        if year == None:
-            year = c_year
+        if team_num == None:
+            await ctx.send(f"Please input a team number after the command")
+        else:
 
-        dis_rank = "https://frc-api.firstinspires.org/v3.0/2022/rankings/district?districtCode=&teamNumber=" + str(team_num)
-        response = requests.request("GET", dis_rank, headers=headers, data=payload) 
+            if year == None:
+                year = c_year
 
-        trans_table = response.text.maketrans(",","\n",'"}{][')
-        response = response.text.translate(trans_table)
+            dis_rank = f"https://frc-api.firstinspires.org/v3.0/{year}/rankings/district?districtCode=&teamNumber={team_num}"
+            response = requests.request("GET", dis_rank, headers=headers, data=payload) 
+
+            trans_table = response.text.maketrans(",","\n",'"}{][')
+            response = response.text.translate(trans_table)
         
-        file = open("dis_rank.txt","w")
-        file.write(response)
-        file.close()
+            file = open("write_to.txt","w")
+            file.write(response)
+            file.close()
         
-        await ctx.send(f"Here is the team {team_num} info", file=discord.File("dis_rank.txt",))
-        await ctx.send(f"Here is the team {team_num} info \n" + response)
+            await ctx.send(f"Here is the team {team_num} info", file=discord.File("write_to.txt",))
+       # await ctx.send(f"Here is the team {team_num} info \n" + response)
 
-    @commands.command(name="get_districts")
+    @commands.command(name="districts")
     async def get_dis(self, ctx:commands.Context, year=None):
+        """Gets all frc districts"""
+        
         if year == None:
             year = c_year
 
-        frc_districts = "https://frc-api.firstinspires.org/v3.0/" + str(year) + "/districts"
+        frc_districts = f"https://frc-api.firstinspires.org/v3.0/{year}/districts"
         response = requests.request("GET", frc_districts, headers=headers, data=payload) 
 
 
         trans_table = response.text.maketrans("{,","\n ",'}]["')
         response = response.text.translate(trans_table)
 
-        file = open("dis_rank.txt", "w")
+        file = open("write_to.txt", "w")
         file.write(response)
         file.close()
 
-        await ctx.send(f"Here is all frc districts", file=discord.File("dis_rank.txt",))
+        await ctx.send(f"Here is all frc districts", file=discord.File("write_to.txt",))
 
     @commands.command(name="score")
     async def score(self, ctx: commands.Context, eventcode, tour_level, team_num=None, start=None, end=None):
@@ -122,13 +128,11 @@ class FrcApi(commands.Cog):
         response = response.text.translate(trans_table)
         response = response.replace("matchNumber","\n\nmatchNumber")
 
-        file = open("dis_rank.txt", "w")
+        file = open("write_to.txt", "w")
         file.write(response)
         file.close()
 
-        await ctx.send(f"The score info you requested", file=discord.File("dis_rank.txt",) )
- 
-
+        await ctx.send(f"The score info you requested", file=discord.File("write_to.txt",) )
 
 
 
