@@ -122,7 +122,7 @@ districtCmpCode null
 districtCmpPoints null
 teamAgePoints 0
 adjustmentPoints 0
-qualifiedDistrictCmp false
+qualifiedDistrictCmp true
 qualifiedFirstCmp false
 districtCode ONT
 teamNumber 4907
