@@ -18,7 +18,6 @@ bot.load_extension("cogs.FrcAPI")
 #Here I'm loading the python files where I stored my commands
 
 
-
 #Here I am opening a json file that has my discord bot token and getting that token and puting it into a constent
  
 load_dotenv()

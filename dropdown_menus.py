@@ -24,8 +24,8 @@ class dis_drop_down(discord.ui.Select):
         option=[
             discord.SelectOption(label="CHS",description="FIRST Chesapeake District"),
             discord.SelectOption(label="FIM",description="FIRST In Michigan District"),
-            discord.SelectOption(label="TX",description="FIRST In Texas District"),
-            discord.SelectOption(label="IN",description="FIRST Indiana Robotics District"),
+            discord.SelectOption(label="FIT",description="FIRST In Texas District"),
+            discord.SelectOption(label="FIN",description="FIRST Indiana Robotics District"),
             discord.SelectOption(label="ISR",description="FIRST Israel District"),
             discord.SelectOption(label="FMA",description="FIRST Mid-Atlantic District"),
             discord.SelectOption(label="FNC",description="FIRST North Carolina District"),
